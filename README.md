@@ -1,0 +1,13 @@
+# SACLA_2025A8039
+
+Analysis tools for the experiment `2025A8039` at SACLA XFEL. The experiment uses SAXS/WAXS on droplets. This repo includes analysis scripts for:
+* converting the data from `.json` to `.h5` file format
+* performing angular integration 
+* sorting data based on hits/miss, excluding shots with streaks, and identifying liquid/frozen shots.  
+
+### Documentation:
+* [Usage examples:](Documentation/usage.md)  Data process pipeline during beamtime
+* [Configuration: ](Documentation/instructions.md) setting up of your system at SACLA servers
+* [Testing:](Documentation/interactive_qsub.md) Submitting jobs interactively with `qsub -I` 
+* [Scripts overview:](Documentation/pipeline.md) details on the scripts and data processing pipeline
+* [Useful Links:](Documentation/links.md) from SACLA and other sources
