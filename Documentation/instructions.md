@@ -57,7 +57,7 @@ run on terminal on remote computer (here port number 8887 is chosen randonmly)
 jupyter lab --no-browser --port 8887 &
 ```
 
-run on terminal on local computer 
+run on new terminal on local computer 
 ```bash
 ssh -N -L localhost:8887:localhost:8887 fperakis@xhpcfep.hpc.spring8.or.jp
 ```
@@ -80,7 +80,7 @@ git config --global http.proxy http://proxy.hpc.spring8.or.jp:3128
 
 #### standard git commands
 ```bash
-git clone https://github.com/fperakis/SACLA_2022B8033.git
+git clone https://github.com/fperakis/SACLA_2025A8039.git
 git status
 git add [file]
 git commit -m “[message]”
