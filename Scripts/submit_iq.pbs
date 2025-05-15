@@ -7,14 +7,15 @@
 #PBS -V                          # Export environment variables
 
 # Load your environment and modules
-cd $PBS_O_WORKDIR
-source ~/venv/bin/activate  # Adjust this to your actual virtualenv
 module load SACLA_tool
+source ~/venv/bin/activate
+
+cd $PBS_O_WORKDIR
 
 # Run the Python script
 python iq_processor.py \
   --data_path /xustrg0/2024B8049 \
-  --run_number 0023 \
+  --run_number 222753 \
   --mask_path /UserData/fperakis/test_data_2025/utilities/empty_mask.npy \
   --output_path /UserData/fperakis/test_data_2025/processed \
   --detector_name RayonixMx225hs \
