@@ -47,7 +47,7 @@ def main(data_path, run_number, mask_path, output_path,
         start_time = time.time()
         I[i], q, phi = ai.integrate2d_ng(
             img, nbins, n_phi, mask=mask,
-            correctSolidAngle=True, unit="q_nm^-1"
+            correctSolidAngle=False, unit="q_nm^-1"
         )
         print(f"Shot {shot}: {1 / (time.time() - start_time):.2f} Hz")
 
@@ -57,7 +57,7 @@ def main(data_path, run_number, mask_path, output_path,
 
     with h5py.File(out_file, "w") as f:
         f.create_dataset("I", data=I)
-        f.create_dataset("q", data=q)
+        f.create_dataset("q", data=q/10) ##! in angstrom
         f.create_dataset("phi", data=phi)
 
     print(f"Iq saved to {out_file}")
