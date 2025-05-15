@@ -1,0 +1,36 @@
+#!/bin/bash
+#PBS -N iq_chunk
+#PBS -l select=1:ncpus=1:mem=4gb
+#PBS -l walltime=00:30:00
+#PBS -j oe
+#PBS -V
+
+# Load your environment and modules
+module load SACLA_tool
+source ~/venv/bin/activate
+
+# Move to the working directory from where the job was submitted
+cd $PBS_O_WORKDIR
+
+# Set variables (passed via qsub -v ...)
+DATA_PATH=${DATA_PATH}
+RUN_NUMBER=${RUN_NUMBER}
+MASK_PATH=${MASK_PATH}
+OUTPUT_PATH=${OUTPUT_PATH}
+PONI_FILE=${PONI_FILE}
+NBINS=${NBINS:-150}
+N_PHI=${N_PHI:-72}
+N_CHUNKS=${N_CHUNKS:-10}
+CHUNK_INDEX=${CHUNK_INDEX}
+
+# Call the processor
+python iq_processor.py \
+  --data_path "$DATA_PATH" \
+  --run_number "$RUN_NUMBER" \
+  --mask_path "$MASK_PATH" \
+  --output_path "$OUTPUT_PATH" \
+  --poni_file "$PONI_FILE" \
+  --nbins "$NBINS" \
+  --n_phi "$N_PHI" \
+  --n_chunks "$N_CHUNKS" \
+  --chunk_index "$CHUNK_INDEX"
