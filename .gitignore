@@ -2,4 +2,4 @@
 .ipynb_checkpoints
 
 # job submission output and error files
-logs/*
+Scripts/logs/*
