@@ -4,10 +4,12 @@
 #PBS -l walltime=00:30:00
 #PBS -j oe
 #PBS -V
+#PBS -o logs/
+#PBS -e logs/
 
 # Load your environment and modules
 module load SACLA_tool
-source ~/venv/bin/activate
+source /home/fperakis/venv/bin/activate
 
 # Move to the working directory from where the job was submitted
 cd $PBS_O_WORKDIR
