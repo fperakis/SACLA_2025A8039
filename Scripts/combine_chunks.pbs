@@ -19,6 +19,8 @@ INPUT_DIR=${INPUT_DIR}
 RUN_NUMBER=${RUN_NUMBER}
 OUTPUT_FILE=${OUTPUT_FILE}
 
+echo "=== PBS script started ===" > $PBS_O_WORKDIR/logs/pbs_debug.log
+
 # Combine all chunks
 python <<EOF
 import os
