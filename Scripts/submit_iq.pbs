@@ -1,0 +1,26 @@
+#!/bin/bash
+#PBS -N iq_proc_0023             # Job name
+#PBS -l select=1:ncpus=8:mem=16gb  # Resources: 1 node, 8 CPUs, 16 GB RAM
+#PBS -l walltime=01:00:00        # Wall time
+#PBS -j oe                       # Join output and error into one file
+#PBS -o /UserData/fperakis/test_data_2025/logs/iq_0023.log  # Output log file
+#PBS -V                          # Export environment variables
+
+# Load your environment and modules
+cd $PBS_O_WORKDIR
+source ~/venv/bin/activate  # Adjust this to your actual virtualenv
+module load SACLA_tool
+
+# Run the Python script
+python iq_processor.py \
+  --data_path /xustrg0/2024B8049 \
+  --run_number 0023 \
+  --mask_path /UserData/fperakis/test_data_2025/utilities/empty_mask.npy \
+  --output_path /UserData/fperakis/test_data_2025/processed \
+  --detector_name RayonixMx225hs \
+  --dist 0.095 \
+  --wavelength 0.887e-10 \
+  --poni1 0.09736 \
+  --poni2 0.10823 \
+  --nbins 150 \
+  --n_phi 72
