@@ -1,0 +1,35 @@
+Loading SACLA_tool/offline
+  Loading requirement: SACLA_env_offline/1.0.0 BL1SpectrometerDataViewer/latest
+    DataConvert4/latest ShowInfoOffline/latest MakeTagList/latest
+    DataConverterGUI/latest DataSort/latest H5AddDBInfo/latest
+    RunDataViewer/latest ImageJ-SACLA ImgAvg/latest ImgLA/latest
+    udbtool_offline/latest TMAOffline/latest
+Traceback (most recent call last):
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/geometry/core.py", line 1360, in load
+    dico = json.loads(filename)
+  File "/home/software/opt/intel/oneapi/intelpython/python3.7/lib/python3.7/json/__init__.py", line 348, in loads
+    return _default_decoder.decode(s)
+  File "/home/software/opt/intel/oneapi/intelpython/python3.7/lib/python3.7/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "/home/software/opt/intel/oneapi/intelpython/python3.7/lib/python3.7/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "iq_processor.py", line 97, in <module>
+    args.poni_file, args.nbins, args.n_phi, args.n_chunks, args.chunk_index)
+  File "iq_processor.py", line 34, in main
+    ai = pyFAI.load(poni_file)
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/__init__.py", line 74, in load
+    return AzimuthalIntegrator.sload(filename)
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/geometry/core.py", line 1344, in sload
+    inst.load(filename)
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/geometry/core.py", line 1363, in load
+    poni = ponifile.PoniFile(data=filename)
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/io/ponifile.py", line 69, in __init__
+    self.read_from_file(data)
+  File "/home/fperakis/venv/lib/python3.7/site-packages/pyFAI/io/ponifile.py", line 91, in read_from_file
+    with open(filename) as opened_file:
+FileNotFoundError: [Errno 2] No such file or directory: '/UserData/fperakis/test_data_2025/utilities/geometry_final.poni'

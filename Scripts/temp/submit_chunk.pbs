@@ -1,6 +1,5 @@
 #!/bin/bash
 #PBS -N iq_chunk
-#PBS -J 0-9 
 #PBS -l select=1:ncpus=1:mem=4gb
 #PBS -l walltime=00:30:00
 #PBS -j oe
@@ -8,20 +7,23 @@
 #PBS -o logs/
 #PBS -e logs/
 
+# Load your environment and modules
 module load SACLA_tool
 source ~/venv/bin/activate
 
-cd $PBS_O_WORKDIR
+# Move to the working directory from where the job was submitted
+cd "$PBS_O_WORKDIR"
 
-# PBS_ARRAY_INDEX provides the chunk index
+# Use PBS_ARRAY_INDEX as the chunk index
 CHUNK_INDEX=${PBS_ARRAY_INDEX}
 
+# Call the processor
 python iq_processor.py \
   --data_path "$DATA_PATH" \
   --run_number "$RUN_NUMBER" \
   --mask_path "$MASK_PATH" \
   --output_path "$OUTPUT_PATH" \
   --poni_file "$PONI_FILE" \
-  --nbins "$NBINS" \
-  --n_phi "$N_PHI" \
-
+  --nbins "${NBINS:-150}" \
+  --n_phi "${N_PHI:-72}" \
+  --chunk_index "$CHUNK_INDEX"
