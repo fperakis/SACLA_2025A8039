@@ -44,7 +44,7 @@ which python
 
 add to your ~/.bashrc the following 
 ```bash
-source env/bin/activate
+source venv/bin/activate
 export PIP_PROXY=http://proxy.hpc.spring8.or.jp:3128
 export HTTPS_PROXY=http://proxy.hpc.spring8.or.jp:3128
 ```
