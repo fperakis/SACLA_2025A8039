@@ -56,7 +56,7 @@ def submit_merge_job(array_job_id, config):
     merge_cmd = [
         "qsub",
         "-W", f"depend=afterok:{job_id_base}",
-        "-v", f"INPUT_DIR={config.output_path},RUN_NUMBER={config.run_number},OUTPUT_FILE={output_file}",
+        "-v", f"INPUT_DIR={config.output_path},RUN_NUMBER={config.run_number},OUTPUT_FILE={output_file}, DATA_PATH={config.data_path}",
         "combine_chunks.pbs"
     ]
 

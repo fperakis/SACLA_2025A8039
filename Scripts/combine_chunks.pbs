@@ -18,6 +18,7 @@ cd $PBS_O_WORKDIR
 INPUT_DIR=${INPUT_DIR}
 RUN_NUMBER=${RUN_NUMBER}
 OUTPUT_FILE=${OUTPUT_FILE}
+DATA_PATH=${DATA_PATH}
 
 echo "=== PBS script started ===" > $PBS_O_WORKDIR/logs/pbs_debug.log
 
@@ -31,6 +32,7 @@ import glob
 input_dir = os.environ["INPUT_DIR"]
 run_number = os.environ["RUN_NUMBER"]
 output_file = os.environ["OUTPUT_FILE"]
+data_path = os.environ["DATA_PATH"]
 
 # === Locate and sort chunk files ===
 pattern = os.path.join(input_dir, f"Iq_{run_number}_chunk*.h5")
@@ -69,7 +71,7 @@ image_ids = np.concatenate(image_id_list)
 #    print(f"WARNING: result.log not found at #{result_log_path}")
 
 meta = {}
-raw_data_dir = os.path.join(os.environ["DATA_PATH"], run_number)
+raw_data_dir = os.path.join(data_path, run_number)
 log_file = os.path.join(raw_data_dir, "result.log")
 if os.path.exists(log_file):
     with open(log_file, "r") as f:
