@@ -32,6 +32,7 @@ input_dir = os.environ["INPUT_DIR"]
 run_number = os.environ["RUN_NUMBER"]
 output_file = os.environ["OUTPUT_FILE"]
 
+# === Locate and sort chunk files ===
 pattern = os.path.join(input_dir, f"Iq_{run_number}_chunk*.h5")
 files = sorted(glob.glob(pattern))
 
@@ -39,24 +40,64 @@ if not files:
     print(f"No chunk files found matching pattern: {pattern}")
     exit(1)
 
-I_list, q, phi = [], None, None
+# === Concatenate I, q, phi, and image_id ===
+I_list, image_id_list, q, phi = [], [], None, None
 
 for fname in files:
     with h5py.File(fname, "r") as f:
         I_list.append(f["I"][:])
+        image_id_list.append(f["image_id"][:])
         if q is None:
             q = f["q"][:]
         if phi is None:
             phi = f["phi"][:]
 
 I_all = np.concatenate(I_list, axis=0)
+image_ids = np.concatenate(image_id_list)
 
+# === Read metadata from result.log ===
+#result_log_path = #os.path.join(os.path.dirname(input_dir), run_number, #"result.log")
+#meta = {}
+
+#if os.path.isfile(result_log_path):
+#    with open(result_log_path, "r") as f:
+#        line = f.readline().strip()
+#        for entry in line.split(","):
+#            key, val = entry.strip().split(":")
+#            meta[key] = int(val)
+#else:
+#    print(f"WARNING: result.log not found at #{result_log_path}")
+
+meta = {}
+raw_data_dir = os.path.join(os.environ["DATA_PATH"], run_number)
+log_file = os.path.join(raw_data_dir, "result.log")
+if os.path.exists(log_file):
+    with open(log_file, "r") as f:
+        line = f.readline().strip()
+        for item in line.split(","):
+            key, val = item.split(":")
+            meta[key.strip()] = val.strip()
+else:
+    print(f"Metadata file not found: {log_file}")
+
+
+# === Write combined data and metadata ===
 with h5py.File(output_file, "w") as f:
     f.create_dataset("I", data=I_all)
     f.create_dataset("q", data=q)
     f.create_dataset("phi", data=phi)
+    f.create_dataset("image_id", data=image_ids)
 
-print(f"Combined data saved to {output_file}")
+    # Write metadata
+    for key, val in meta.items():
+        try:
+            f.create_dataset(key, data=int(val))
+        except ValueError:
+            f.create_dataset(key, data=str(val))
+    #for key, val in meta.items():
+    #    f.create_dataset(key, data=val)
+
+print(f"Combined data and metadata saved to {output_file}")
 EOF
 
 # Delete chunk files if the merged file was created

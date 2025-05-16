@@ -2,7 +2,6 @@ import os
 import argparse
 import glob
 import time
-import re
 import numpy as np
 import h5py
 import pyFAI
@@ -38,17 +37,12 @@ def main(data_path, run_number, mask_path, output_path,
     print(f"Processing chunk {chunk_index+1}/{n_chunks}: shots {start} to {end-1}")
     print(f"Total shots: {total_shots}")
 
-    # Allocate output arrays
+    # Allocate output array
     I = np.zeros((end - start, n_phi, nbins))
-    image_ids = np.zeros((end - start,), dtype=int)
 
     for i, shot in enumerate(range(start, end)):
         image_path = file_list[shot]
         img = mpimg.imread(image_path).astype("int16")
-
-        # Extract image ID from filename
-        match = re.search(r"data_(\d+)\.img", os.path.basename(image_path))
-        image_ids[i] = int(match.group(1)) if match else -1
 
         start_time = time.time()
         I[i], q, phi = ai.integrate2d_ng(
@@ -63,9 +57,8 @@ def main(data_path, run_number, mask_path, output_path,
 
     with h5py.File(out_file, "w") as f:
         f.create_dataset("I", data=I)
-        f.create_dataset("q", data=q/10)  # in angstrom
+        f.create_dataset("q", data=q/10) ##! in angstrom
         f.create_dataset("phi", data=phi)
-        f.create_dataset("image_id", data=image_ids)
 
     print(f"Iq saved to {out_file}")
 

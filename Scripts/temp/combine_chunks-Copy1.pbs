@@ -1,0 +1,69 @@
+#!/bin/bash
+#PBS -N combine_chunks
+#PBS -l select=1:ncpus=1:mem=4gb
+#PBS -l walltime=00:10:00
+#PBS -j oe
+#PBS -V
+#PBS -o logs/
+#PBS -e logs/
+
+# Load environment
+module load SACLA_tool
+source ~/venv/bin/activate
+
+# Move to working directory
+cd $PBS_O_WORKDIR
+
+# Input parameters passed via -v
+INPUT_DIR=${INPUT_DIR}
+RUN_NUMBER=${RUN_NUMBER}
+OUTPUT_FILE=${OUTPUT_FILE}
+
+echo "=== PBS script started ===" > $PBS_O_WORKDIR/logs/pbs_debug.log
+
+# Combine all chunks
+python <<EOF
+import os
+import h5py
+import numpy as np
+import glob
+
+input_dir = os.environ["INPUT_DIR"]
+run_number = os.environ["RUN_NUMBER"]
+output_file = os.environ["OUTPUT_FILE"]
+
+pattern = os.path.join(input_dir, f"Iq_{run_number}_chunk*.h5")
+files = sorted(glob.glob(pattern))
+
+if not files:
+    print(f"No chunk files found matching pattern: {pattern}")
+    exit(1)
+
+I_list, q, phi = [], None, None
+
+for fname in files:
+    with h5py.File(fname, "r") as f:
+        I_list.append(f["I"][:])
+        if q is None:
+            q = f["q"][:]
+        if phi is None:
+            phi = f["phi"][:]
+
+I_all = np.concatenate(I_list, axis=0)
+
+with h5py.File(output_file, "w") as f:
+    f.create_dataset("I", data=I_all)
+    f.create_dataset("q", data=q)
+    f.create_dataset("phi", data=phi)
+
+print(f"Combined data saved to {output_file}")
+EOF
+
+# Delete chunk files if the merged file was created
+if [ -f "$OUTPUT_FILE" ]; then
+    echo "Merged file created: $OUTPUT_FILE"
+    echo "Deleting chunk files..."
+    rm -v "${INPUT_DIR}/Iq_${RUN_NUMBER}_chunk"*.h5
+else
+    echo "Merged file not found. Skipping chunk deletion."
+fi
