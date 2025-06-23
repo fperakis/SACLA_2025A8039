@@ -15,9 +15,9 @@ def main(data_path, run_number, mask_path, output_path,
     chunk_index = int(os.environ.get("PBS_ARRAY_INDEX", 0))
     n_chunks = int(os.environ["N_CHUNKS"])
 
-    # Load mask and integrator
-    mask = np.load(mask_path)
+    # Load integrator
     ai = pyFAI.load(poni_file)
+    print(mask_path)
 
     # Build list of .img files
     run_dir = os.path.join(data_path, run_number)
@@ -51,9 +51,10 @@ def main(data_path, run_number, mask_path, output_path,
         image_ids[i] = int(match.group(1)) if match else -1
 
         start_time = time.time()
+        mask = np.load(mask_path)
         I[i], q, phi = ai.integrate2d_ng(
             img, nbins, n_phi, mask=mask,
-            correctSolidAngle=False, unit="q_nm^-1"
+            correctSolidAngle=False, unit="q_A^-1"
         )
         print(f"Shot {shot}: {1 / (time.time() - start_time):.2f} Hz")
 
@@ -63,7 +64,7 @@ def main(data_path, run_number, mask_path, output_path,
 
     with h5py.File(out_file, "w") as f:
         f.create_dataset("I", data=I)
-        f.create_dataset("q", data=q/10)  # in angstrom
+        f.create_dataset("q", data=q)  # in angstrom
         f.create_dataset("phi", data=phi)
         f.create_dataset("image_id", data=image_ids)
 
