@@ -9,14 +9,14 @@
 #PBS -e logs/
 
 module load SACLA_tool
-source ~/venv/bin/activate
+source ~/venvs/analysis/bin/activate
 
 cd $PBS_O_WORKDIR
 
 # PBS_ARRAY_INDEX provides the chunk index
 CHUNK_INDEX=${PBS_ARRAY_INDEX}
 
-python iq_processor.py \
+python3 iq_processor.py \
   --data_path "$DATA_PATH" \
   --run_number "$RUN_NUMBER" \
   --mask_path "$MASK_PATH" \
