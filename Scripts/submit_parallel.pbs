@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#PBS -N iq_chunk
+#PBS -l select=1:ncpus=48:mem=64gb
+#PBS -l walltime=10:00:00
+#PBS -j oe
+#PBS -V
+#PBS -o logs/
+#PBS -e logs/
+
+module load SACLA_tool
+source ~/venvs/analysis/bin/activate
+
+cd $PBS_O_WORKDIR
+
+python3 iq_processor_parallel.py \
+  --data_path "$DATA_PATH" \
+  --run_number "$RUN_NUMBER" \
+  --mask_path "$MASK_PATH" \
+  --output_path "$OUTPUT_PATH" \
+  --poni_file "$PONI_FILE" \
+  --nbins "$NBINS" \
+  --n_phi "$N_PHI" \
+  --n_chunks "$N_CHUNKS"
+

@@ -52,9 +52,10 @@ def main(data_path, run_number, mask_path, output_path,
 
         start_time = time.time()
         mask = np.load(mask_path)
+        polarization = ai.guess_polarization(img, npt_rad=nbins, npt_azim=n_phi, unit='q_A^-1')
         I[i], q, phi = ai.integrate2d_ng(
             img, nbins, n_phi, mask=mask,
-            correctSolidAngle=False, unit="q_A^-1"
+            correctSolidAngle=False, unit="q_A^-1", polarization_factor=polarization
         )
         print(f"Shot {shot}: {1 / (time.time() - start_time):.2f} Hz")
 
